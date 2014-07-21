@@ -1,8 +1,7 @@
 /*
-  Blink
-  Turns on an LED on for one second, then off for one second, repeatedly.
- 
-  This example code is in the public domain.
+ This runs the blink command for all the output ports
+ {♥} COMINGLE
+   This example code is in the public domain.
  */
  
 // Pin 13 has an LED connected on most Arduino boards.
