@@ -13,7 +13,7 @@ import processing.serial.*;
  
 String delimiterBetweenMultipleValues = "|";
 String delimiterBetweenLabelAndValue = ":";
- 
+   int  numserialreads=0;
 int graphStartX = 100;
 int textHeight = 15;
 int textPadding = 2;
@@ -34,7 +34,9 @@ int xPos = graphStartX;         // horizontal position of the graph
 int partH;          // partial screen height
 
 int valmin = 0;
-int valmax=255;
+int valmax=1024;
+
+
 
  
 void setup () {
@@ -44,8 +46,8 @@ void setup () {
     
   //Get Serial Setup
   println(Serial.list());
-  // Open Serial port at 115200.
-  myPort = new Serial(this, Serial.list()[0], 115200);
+  // Open Serial port at 9600.
+  myPort = new Serial(this, Serial.list()[0], 9600);
   myPort.clear();
   myPort.bufferUntil('\n');
   background(0);
@@ -71,10 +73,25 @@ void serialEvent (Serial myPort) {
   String inString = myPort.readStringUntil('\n');
  
   if (inString != null) {
+   //Throw away the first couple of serial reads cuz they funky sometimes
+//TODO make not Hacky
+    numserialreads++;
+    
     // trim off any whitespace.
     inString = trim(inString);
     // Show the incoming data string.
     println(inString);
+    
+    if (numserialreads<20){ //Reset all the stuff
+println("initializing");
+return;
+}
+if (numserialreads==20){ //Reset all the stuff
+         xPos = 0;
+        background(0);   // erase screen with black
+
+}
+
     // split the incoming string into pairs of label+value and store in an array.
     valuePairs = split(inString, delimiterBetweenMultipleValues);
     

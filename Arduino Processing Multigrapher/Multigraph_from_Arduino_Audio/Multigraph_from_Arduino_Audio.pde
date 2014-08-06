@@ -35,7 +35,7 @@ int xPos = graphStartX;         // horizontal position of the graph
 int partH;          // partial screen height
 
 int valmin = 0;
-int valmax=255;//Max value your sensor will output
+int valmax=255;
 
 int numserialreads=0;
 boolean audioloaded =false;
@@ -99,7 +99,7 @@ void keyPressed() {
 void serialEvent (Serial myPort) {
 
   // get the ASCII string:
-  String inString = myPort.readStringUntil('\n');
+  String inString = myPort.readStringUntil(10);
 
  
   if (inString != null) {
