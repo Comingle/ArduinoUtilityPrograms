@@ -35,7 +35,7 @@ int xPos = graphStartX;         // horizontal position of the graph
 int partH;          // partial screen height
 
 int valmin = 0;
-int valmax=255;
+int valmax=70;
 
 int numserialreads=0;
 boolean audioloaded =false;
@@ -62,9 +62,9 @@ void setup () {
   //Get Serial Setup
   println(Serial.list());
   // Open Serial port at 115200.
-  myPort = new Serial(this, Serial.list()[0], 115200);
+  myPort = new Serial(this, Serial.list()[0], 9600);
   myPort.clear();
-  myPort.bufferUntil('\n');
+  myPort.bufferUntil(10);
   background(0);
   
   
@@ -99,7 +99,7 @@ void keyPressed() {
 void serialEvent (Serial myPort) {
 
   // get the ASCII string:
-  String inString = myPort.readStringUntil(10);
+  String inString = myPort.readString();
 
  
   if (inString != null) {
@@ -117,7 +117,10 @@ void serialEvent (Serial myPort) {
     int totalinputs = valuePairs.length;
       partH = height / totalinputs;    // to divide screen up to draw the number of sensors
 
-
+if (numserialreads<20){ //Reset all the stuff
+println("initializing");
+return;
+}
 if (numserialreads==20){ //Reset all the stuff
          xPos = 0;
         background(0);   // erase screen with black
@@ -173,9 +176,9 @@ if(audioloaded){
   //a= 1.059463094359
   //fo is base note Starting at a low A (110 A2) 
   // n is number of half steps away for the desired note
-  float freq = 220*pow(1.059463094359,j*9); //base note  //j*3 gives a chord-feel, but cramped space for audio
+  float freq = 110*pow(1.059463094359,j*5); //base note  //j*3 gives a chord-feel, but cramped space for audio
   
-   freq = freq+ value; //Modulated with the changes of this input
+   freq = freq+ value*2; //Modulated with the changes of this input
   
   /*55*pow(2,j)  // Octaves base on A 
  + 55*2^(j+1) - 55*2^(j) ;  //choose a note in this octave
@@ -213,7 +216,11 @@ void loadAudio(int inputs){
 waves= new Oscil[inputs];
   for (int j=0; j<inputs; j++)
  {
-   waves[j]=new Oscil( 110*(j+1), 0.5f, Waves.SINE );
+//   waves[j]=new Oscil( 110*(j+1), 0.5f, Waves.randomNOddHarms(3) ); //Alt Sounds cool!
+  // waves[j]=new Oscil( 110*(j+1), 0.5f, Waves.randomNHarms(3) );// ALT also cool
+      waves[j]=new Oscil( 110*(j+1), 0.5f, Waves.TRIANGLE );
+
+
      waves[j].patch( out );
  }
 audioloaded=true;
